@@ -1,4 +1,9 @@
 #include "systemcalls.h"
+#include <stdlib.h>
+#include <sys/wait.h>
+#include <string.h>
+#include <unistd.h>
+#include <fcntl.h>
 
 /**
  * @param cmd the command to execute with system()
@@ -16,7 +21,9 @@ bool do_system(const char *cmd)
  *   and return a boolean true if the system() call completed with success
  *   or false() if it returned a failure
 */
-
+    if (system(cmd) != 0) {
+      return false;
+    }
     return true;
 }
 
@@ -58,6 +65,30 @@ bool do_exec(int count, ...)
  *   as second argument to the execv() command.
  *
 */
+    int pid;
+    int status;
+    switch (pid = fork()) {
+      case -1:
+	return false; 
+
+      case 0:
+	if (execv(command[0], command) != 0) {
+	  exit(-1);
+	}
+	break; 
+     
+      default:
+	if(waitpid(pid, &status, 0) == -1) {
+	  return false; 
+	}
+
+	if (WIFEXITED(status)) {
+	  if(WEXITSTATUS(status) != 0) {
+	    return false;
+	  }
+	}
+	break;
+    }
 
     va_end(args);
 
@@ -92,6 +123,43 @@ bool do_exec_redirect(const char *outputfile, int count, ...)
  *   The rest of the behaviour is same as do_exec()
  *
 */
+    int pid = fork(); 
+    int status;
+    int fd = open(outputfile, O_RDWR | O_CREAT | O_TRUNC, S_IRWXU | S_IRGRP | S_IROTH);
+
+    if (fd < 0) {
+      fprintf(stderr, "Failed to open the desired file, the file path is incorrect!");
+      return false;   
+    }
+    switch (pid) {
+      case -1:
+	return false;  
+      
+      case 0:
+	if (dup2(fd, STDOUT_FILENO) < 0) {
+	  fprintf(stderr, "Failed to redirect output to the desired file"); 
+	  return false; 
+	}
+
+	if(execv(command[0], command) != 0) {
+	  exit(-1);
+	}
+	
+	break;
+
+      default:
+        if(waitpid(pid, &status, 0) == -1) {
+          return false;
+        }
+
+        if (WIFEXITED(status)) {
+          if(WEXITSTATUS(status) != 0) {
+            return false;
+          }
+        }
+        break;
+
+    }
 
     va_end(args);
 
