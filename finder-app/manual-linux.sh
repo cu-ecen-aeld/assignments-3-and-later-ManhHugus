@@ -91,12 +91,12 @@ ${CROSS_COMPILE}readelf -a ${OUTDIR}/rootfs/bin/busybox | grep "Shared library"
 
 # TODO: Add library dependencies to rootfs
 echo "Adding library dependencies to rootfs..."
-SYSROOT=(dirname $(which ${CROSS_COMPILE}gcc)
+SYSROOT=$(${CROSS_COMPILE}gcc --print-sysroot)
 
-cp "${SYSROOT}/ld-linux-aarch64.so.1" "${OUTDIR}/rootfs/lib"
-cp "${SYSROOT}/libm.so.6" "${OUTDIR}/rootfs/lib64"
-cp "${SYSROOT}/libresolv.so.2" "${OUTDIR}/rootfs/lib64"
-cp "${SYSROOT}/libc.so.6" "${OUTDIR}/rootfs/lib64"
+cp "${SYSROOT}/lib/ld-linux-aarch64.so.1" "${OUTDIR}/rootfs/lib"
+cp "${SYSROOT}/lib64/libm.so.6" "${OUTDIR}/rootfs/lib64"
+cp "${SYSROOT}/lib64/libresolv.so.2" "${OUTDIR}/rootfs/lib64"
+cp "${SYSROOT}/lib64/libc.so.6" "${OUTDIR}/rootfs/lib64"
 
 echo "Added library dependencies to rootfs"
 
