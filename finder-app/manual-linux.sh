@@ -44,8 +44,8 @@ if [ ! -e ${OUTDIR}/linux-stable/arch/${ARCH}/boot/Image ]; then
     echo "Making Kernel Image..."
     make -j4 ARCH=arm64 CROSS_COMPILE=aarch64-none-linux-gnu- all
 
-    # echo "Making modules..."
-    # make ARCH=arm64 CROSS_COMPILE=aarch64-none-linux-gnu- modules
+    echo "Making modules..."
+    make ARCH=arm64 CROSS_COMPILE=aarch64-none-linux-gnu- modules
 
     echo "Making dtbs..."
     make ARCH=arm64 CROSS_COMPILE=aarch64-none-linux-gnu- dtbs
