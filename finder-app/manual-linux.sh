@@ -117,9 +117,8 @@ echo "Built the writer utility"
 # TODO: Copy the finder related scripts and executables to the /home directory
 # on the target rootfs
 echo "Copying the finder related scripts and executables..."
-mkdir "${OUTDIR}/rootfs/home"
 cp "finder.sh" "autorun-qemu.sh" "writer.sh" "finder-test.sh" "${OUTDIR}/rootfs/home"
-mkdir "${OUTDIR}/rootfs/home/conf"
+mkdir "${OUTDIR}/rootfs/home/conf/"
 cp "${FINDER_APP_DIR}/conf/assignment.txt" "${FINDER_APP_DIR}/conf/username.txt" "${OUTDIR}/rootfs/home/conf"
 echo "Copied all the finder related scripts and executables to the desired destinations"
 
