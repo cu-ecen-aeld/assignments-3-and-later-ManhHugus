@@ -121,6 +121,8 @@ echo "Copying the finder related scripts and executables..."
 cp "finder.sh" "autorun-qemu.sh" "writer.sh" "finder-test.sh" "${OUTDIR}/rootfs/home"
 mkdir "${OUTDIR}/rootfs/conf/"
 cp -r "../conf" "${OUTDIR}/rootfs"
+mkdir "${OUTDIR}/rootfs/home/conf"
+cp "conf/username.txt" "conf/assignment.txt" "${OUTDIR}/rootfs/home/conf"
 echo "Copied all the finder related scripts and executables to the desired destinations"
 
 # TODO: Chown the root directory
